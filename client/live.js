@@ -12,6 +12,7 @@ $(function() {
 	var header = $(".header");
 	var hot = false;
 	var currentHash = "";
+	var refresh = $(".header .refresh");
 
 	var contentPage = window.location.pathname.substr("/webpack-dev-server".length) + window.location.search;
 
@@ -79,10 +80,18 @@ $(function() {
 		$errors.show(); iframe.hide();
 	});
 
+	refresh.on('click', function() {
+		location.hash = iframe[0].contentWindow.location.hash;
+		location.reload();
+	});
+
 	iframe.load(function() {
 		status.text("App ready.");
 		header.css({borderColor: ""});
 		iframe.show();
+		iframe[0].contentWindow.onhashchange = function() {
+			refresh.attr('href', this.location.hash);
+		};
 	});
 
 	function reloadApp() {
